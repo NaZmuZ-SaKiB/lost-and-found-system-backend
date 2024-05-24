@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String     @id @default(uuid())
+  name     String
+  email    String     @unique
+  password String
+  status   UserStatus @default(ACTIVE)
+  role     Role       @default(USER)
+
+  userProfile UserProfile?
+  foundItem   FoundItem[]
+  lostItem    LostItem[]
+  claim       Claim[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model UserProfile {
+  id        String  @id @default(uuid())
+  bio       String?
+  age       Int?
+  contactNo String
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user-profiles")
+}
+
+model Category {
+  id   String @id @default(uuid())
+  name String @unique
+
+  foundItem FoundItem[]
+  lostItem  LostItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model FoundItem {
+  id            String  @id @default(uuid())
+  foundItemName String
+  brand         String?
+  description   String
+  location      String
+  contactNo     String?
+  foundDate     String?
+  image         String?
+  claimProcess  String?
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  claim Claim[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("found-items")
+}
+
+model LostItem {
+  id           String  @id @default(uuid())
+  lostItemName String
+  brand        String?
+  description  String
+  location     String
+  contactNo    String?
+  lostDate     String?
+  image        String?
+  found        Boolean @default(false)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("lost-items")
+}
+
+model Claim {
+  id                     String      @id @default(uuid())
+  status                 ClaimStatus @default(PENDING)
+  distinguishingFeatures String
+  lostDate               DateTime
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  foundItemId String
+  foundItem   FoundItem @relation(fields: [foundItemId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("claims")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
