@@ -25,7 +25,6 @@ const createUserService = async (payload: TCreateUserPayload) => {
   const hashedPassword: string = await bcrypt.hash(payload.password, 12);
 
   const userData = {
-    name: payload.name,
     email: payload.email,
     password: hashedPassword,
   };
@@ -62,9 +61,13 @@ const loginService = async (payload: { email: string; password: string }) => {
     },
     select: {
       id: true,
-      name: true,
       password: true,
       role: true,
+      userProfile: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -85,7 +88,7 @@ const loginService = async (payload: { email: string; password: string }) => {
 
   return {
     id: isUser.id,
-    name: isUser.name,
+    name: isUser?.userProfile?.name,
     email: payload.email,
     token,
   };
