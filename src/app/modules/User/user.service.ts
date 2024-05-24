@@ -64,6 +64,7 @@ const loginService = async (payload: { email: string; password: string }) => {
       id: true,
       name: true,
       password: true,
+      role: true,
     },
   });
 
@@ -77,7 +78,7 @@ const loginService = async (payload: { email: string; password: string }) => {
   }
 
   const token = jwtHelpers.generateToken(
-    { email: payload.email, id: isUser.id },
+    { email: payload.email, id: isUser.id, role: isUser.role },
     config.jwt_token_secret as string,
     config.jwt_token_expires_in as string
   );
