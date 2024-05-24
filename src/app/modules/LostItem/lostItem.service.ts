@@ -1,11 +1,11 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../utils/prisma";
-import { FoundItemConstants } from "./foundItem.constant";
-import { TReportFoundItemPayload } from "./foundItem.interface";
 import { TSortOrder } from "../../interfaces";
+import { TReportLostItemPayload } from "./lostItem.interface";
+import { LostItemConstants } from "./lostItem.constant";
 
-const reportFoundItem = async (
-  payload: TReportFoundItemPayload,
+const reportLostItem = async (
+  payload: TReportLostItemPayload,
   userId: string
 ) => {
   // if categoryId is wrong, throw error
@@ -15,7 +15,7 @@ const reportFoundItem = async (
     },
   });
 
-  const result = await prisma.foundItem.create({
+  const result = await prisma.lostItem.create({
     data: { ...payload, userId },
     include: {
       user: true,
@@ -28,14 +28,14 @@ const reportFoundItem = async (
   return result;
 };
 
-const getAllFoundItems = async (query: Record<string, unknown>) => {
+const getAllLostItems = async (query: Record<string, unknown>) => {
   // Handling Pagination
   const page: number = Number(query?.page) || 1;
   const limit: number = Number(query?.limit) || 5;
   const skip: number = (page - 1) * limit;
 
   // Handling Sorting
-  const sortOrder: TSortOrder = FoundItemConstants.validSortOrders.includes(
+  const sortOrder: TSortOrder = LostItemConstants.validSortOrders.includes(
     query?.sortOrder as any
   )
     ? (query.sortOrder as TSortOrder)
@@ -49,8 +49,8 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
   // Handling Sort Order according to its type
   if (
     query?.sortBy &&
-    FoundItemConstants.sortableFields.includes(query.sortBy as string) &&
-    query?.sortBy !== "foundDate"
+    LostItemConstants.sortableFields.includes(query.sortBy as string) &&
+    query?.sortBy !== "lostDate"
   ) {
     if (query?.sortBy === "category") {
       orderBy = {
@@ -66,12 +66,12 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
   }
 
   // Handling Filters
-  const andConditions: Prisma.FoundItemWhereInput[] = [];
+  const andConditions: Prisma.LostItemWhereInput[] = [];
 
   // Filter By Search
   if (query?.searchTerm) {
     andConditions.push({
-      OR: FoundItemConstants.searchableFields.map((field) => ({
+      OR: LostItemConstants.searchableFields.map((field) => ({
         [field]: {
           contains: query.searchTerm,
           mode: "insensitive",
@@ -83,23 +83,24 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
   // Filter by Found Item Name
   if (query?.foundItemName) {
     andConditions.push({
-      foundItemName: {
-        equals: query.foundItemName as string,
+      lostItemName: {
+        equals: query.lostItemName as string,
       },
     });
   }
 
-  const whereConditions: Prisma.FoundItemWhereInput = { AND: andConditions };
-  const result = await prisma.foundItem.findMany({
+  const whereConditions: Prisma.LostItemWhereInput = { AND: andConditions };
+  const result = await prisma.lostItem.findMany({
     where: whereConditions,
     skip,
     take: limit,
     orderBy,
     select: {
       id: true,
-      foundItemName: true,
+      lostItemName: true,
       description: true,
       location: true,
+      lostDate: true,
       createdAt: true,
       updatedAt: true,
       user: {
@@ -119,14 +120,14 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
     },
   });
 
-  const total = await prisma.foundItem.count({
+  const total = await prisma.lostItem.count({
     where: whereConditions,
   });
 
   return { meta: { page, limit, total }, data: result };
 };
 
-export const FoundItemService = {
-  getAllFoundItems,
-  reportFoundItem,
+export const LostItemService = {
+  getAllLostItems,
+  reportLostItem,
 };

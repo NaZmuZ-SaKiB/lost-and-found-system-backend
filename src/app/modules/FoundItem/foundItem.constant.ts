@@ -1,5 +1,5 @@
 import { FoundItem } from "@prisma/client";
-import { TSortOrder } from "./foundItem.interface";
+import { TSortOrder } from "../../interfaces";
 
 const searchableFields: (keyof FoundItem)[] = [
   "foundItemName",
