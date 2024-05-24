@@ -4,6 +4,7 @@ import { CategoryRoutes } from "../modules/Category/category.route";
 import { FoundItemRoutes } from "../modules/FoundItem/foundItem.route";
 import { ClaimRoutes } from "../modules/Claim/claim.route";
 import { ProfileRoutes } from "../modules/Profile/profile.route";
+import { LostItemRoutes } from "../modules/LostItem/lostItem.route";
 
 const router = Router();
 
@@ -22,15 +23,19 @@ const paths: TPath[] = [
     route: ProfileRoutes,
   },
   {
-    path: "/",
+    path: "/categories",
     route: CategoryRoutes,
   },
   {
-    path: "/",
+    path: "/found-items",
     route: FoundItemRoutes,
   },
   {
-    path: "/",
+    path: "/lost-items",
+    route: LostItemRoutes,
+  },
+  {
+    path: "/claims",
     route: ClaimRoutes,
   },
 ];

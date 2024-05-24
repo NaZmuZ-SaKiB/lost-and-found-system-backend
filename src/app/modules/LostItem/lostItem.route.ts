@@ -7,12 +7,14 @@ import { LostItemValidation } from "./lostItem.validation";
 const router = Router();
 
 // GET
-router.get("/found-items", LostItemController.getAllLostItems);
+router.get("/", LostItemController.getAllLostItems);
 
 // POST
 router.post(
-  "/found-items",
+  "/",
   auth,
   validateRequest(LostItemValidation.reportLostItem),
   LostItemController.reportLostItem
 );
+
+export const LostItemRoutes = router;

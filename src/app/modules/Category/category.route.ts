@@ -6,9 +6,12 @@ import { CategoryValidation } from "./category.validation";
 
 const router = Router();
 
+// GET
+router.get("/", CategoryController.getAllCategories);
+
 // POST
 router.post(
-  "/found-item-categories",
+  "/",
   auth,
   validateRequest(CategoryValidation.create),
   CategoryController.createCategory

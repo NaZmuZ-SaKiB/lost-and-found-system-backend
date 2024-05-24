@@ -7,11 +7,11 @@ import { FoundItemController } from "./foundItem.controller";
 const router = Router();
 
 // GET
-router.get("/found-items", FoundItemController.getAllFoundItems);
+router.get("/", FoundItemController.getAllFoundItems);
 
 // POST
 router.post(
-  "/found-items",
+  "/",
   auth,
   validateRequest(FoundItemValidation.reportFoundItem),
   FoundItemController.reportFoundItem
