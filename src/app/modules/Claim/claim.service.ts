@@ -1,6 +1,8 @@
 import prisma from "../../utils/prisma";
 import { ClaimStatus, Prisma } from "@prisma/client";
 import { TCreateClaimPayload } from "./claim.interface";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 const createClaim = async (payload: TCreateClaimPayload, userId: string) => {
   // If no found item with given info, throw error
@@ -99,8 +101,40 @@ const updateClaimStatus = async (
   return result;
 };
 
+const deleteClaim = async (userId: string, claimId: string) => {
+  const claim = await prisma.claim.findUnique({
+    where: {
+      id: claimId,
+    },
+    select: {
+      id: true,
+      userId: true,
+    },
+  });
+
+  if (!claim) {
+    throw new AppError(httpStatus.NOT_FOUND, "Claim not found");
+  }
+
+  if (claim.userId !== userId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Unauthorized to delete this claim."
+    );
+  }
+
+  await prisma.claim.delete({
+    where: {
+      id: claimId,
+    },
+  });
+
+  return null;
+};
+
 export const ClaimService = {
   createClaim,
   getAllClaims,
   updateClaimStatus,
+  deleteClaim,
 };

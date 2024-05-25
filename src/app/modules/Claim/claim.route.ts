@@ -25,4 +25,6 @@ router.put(
   ClaimController.updateClaimStatus
 );
 
+// Delete
+router.delete("/:claimId", auth, ClaimController.deleteClaim);
 export const ClaimRoutes = router;
