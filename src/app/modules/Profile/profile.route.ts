@@ -10,7 +10,7 @@ const router = Router();
 router.put(
   "/my-profile",
   auth,
-  validateRequest(ProfileValidation.updateProfile as any),
+  validateRequest(ProfileValidation.updateProfile),
   ProfileController.updateProfile
 );
 
