@@ -99,6 +99,9 @@ const getAllLostItems = async (query: Record<string, unknown>) => {
       id: true,
       lostItemName: true,
       description: true,
+      brand: true,
+      contactNo: true,
+      found: true,
       location: true,
       lostDate: true,
       createdAt: true,
@@ -112,6 +115,7 @@ const getAllLostItems = async (query: Record<string, unknown>) => {
           userProfile: {
             select: {
               name: true,
+              contactNo: true,
             },
           },
         },
