@@ -28,10 +28,17 @@ const getAllClaims = async () => {
           user: {
             select: {
               id: true,
-              name: true,
+
               email: true,
               createdAt: true,
               updatedAt: true,
+
+              userProfile: {
+                select: {
+                  name: true,
+                  contactNo: true,
+                },
+              },
             },
           },
           category: true,

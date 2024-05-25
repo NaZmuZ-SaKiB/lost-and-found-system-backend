@@ -12,12 +12,10 @@ const create = z.object({
     invalid_type_error: "Distinguishing Features must be a string.",
     required_error: "Distinguishing Features is required.",
   }),
-  lostDate: z
-    .string({
-      invalid_type_error: "Lost Date must be a string.",
-      required_error: "Lost Date is required.",
-    })
-    .datetime({ message: "Invalid Date Time - Lost Date." }),
+  lostDate: z.string({
+    invalid_type_error: "Lost Date must be a string.",
+    required_error: "Lost Date is required.",
+  }),
 });
 
 const updateStatus = z.object({

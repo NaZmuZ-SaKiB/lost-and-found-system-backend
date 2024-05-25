@@ -100,6 +100,10 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
       foundItemName: true,
       description: true,
       location: true,
+      foundDate: true,
+      claimProcess: true,
+      contactNo: true,
+      brand: true,
       createdAt: true,
       updatedAt: true,
       user: {
@@ -111,6 +115,7 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
           userProfile: {
             select: {
               name: true,
+              contactNo: true,
             },
           },
         },
@@ -126,7 +131,49 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
   return { meta: { page, limit, total }, data: result };
 };
 
+const getFoundItemById = async (id: string) => {
+  const result = await prisma.foundItem.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          userProfile: {
+            select: {
+              name: true,
+              contactNo: true,
+            },
+          },
+        },
+      },
+      category: true,
+    },
+  });
+
+  return result;
+};
+
+const isFoundItemClaimedByMe = async (userId: string, foundItemId: string) => {
+  const claim = await prisma.claim.findFirst({
+    where: {
+      foundItemId,
+      userId,
+    },
+    select: { id: true },
+  });
+
+  if (claim) {
+    return { claimed: true };
+  } else {
+    return { claimed: false };
+  }
+};
+
 export const FoundItemService = {
   getAllFoundItems,
   reportFoundItem,
+  getFoundItemById,
+  isFoundItemClaimedByMe,
 };

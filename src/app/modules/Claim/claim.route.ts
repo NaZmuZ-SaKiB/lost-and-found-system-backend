@@ -7,11 +7,11 @@ import { ClaimController } from "./claim.controller";
 const router = Router();
 
 // GET
-router.get("/claims", auth, ClaimController.getAllClaims);
+router.get("/", auth, ClaimController.getAllClaims);
 
 // POST
 router.post(
-  "/claims",
+  "/",
   auth,
   validateRequest(ClaimValidation.create),
   ClaimController.createClaim
@@ -19,7 +19,7 @@ router.post(
 
 // PUT
 router.put(
-  "/claims/:claimId",
+  "/:claimId",
   auth,
   validateRequest(ClaimValidation.updateStatus),
   ClaimController.updateClaimStatus

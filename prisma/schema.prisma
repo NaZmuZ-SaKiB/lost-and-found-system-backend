@@ -106,7 +106,7 @@ model Claim {
   id                     String      @id @default(uuid())
   status                 ClaimStatus @default(PENDING)
   distinguishingFeatures String
-  lostDate               DateTime
+  lostDate               String
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
