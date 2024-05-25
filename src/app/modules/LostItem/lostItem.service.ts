@@ -16,7 +16,7 @@ const reportLostItem = async (
   });
 
   const result = await prisma.lostItem.create({
-    data: { ...payload, userId },
+    data: { ...payload, userId, brand: payload.brand?.toLowerCase() },
     include: {
       user: true,
       category: true,

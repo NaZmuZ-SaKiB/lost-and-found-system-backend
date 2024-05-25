@@ -16,7 +16,7 @@ const reportFoundItem = async (
   });
 
   const result = await prisma.foundItem.create({
-    data: { ...payload, userId },
+    data: { ...payload, userId, brand: payload.brand?.toLowerCase() },
     include: {
       user: true,
       category: true,
