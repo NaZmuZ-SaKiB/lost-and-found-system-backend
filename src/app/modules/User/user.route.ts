@@ -22,4 +22,11 @@ router.post(
   UserController.login
 );
 
+// PUT
+router.put(
+  "/change-password",
+  validateRequest(UserValidation.changePassword),
+  UserController.changePassword
+);
+
 export const UserRoutes = router;

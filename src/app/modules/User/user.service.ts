@@ -94,8 +94,46 @@ const loginService = async (payload: { email: string; password: string }) => {
   };
 };
 
+const changePasswordService = async (
+  userId: string,
+  payload: { oldPassword: string; newPassword: string }
+) => {
+  const isUser = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+    select: {
+      id: true,
+      password: true,
+    },
+  });
+
+  const isCorrectPassword = await bcrypt.compare(
+    payload.oldPassword,
+    isUser.password
+  );
+
+  if (!isCorrectPassword) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "Invalid Old Password.");
+  }
+
+  const hashedPassword: string = await bcrypt.hash(payload.newPassword, 12);
+
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+
+  return null;
+};
+
 export const UserService = {
   createUserService,
   loginService,
   getMyProfile,
+  changePasswordService,
 };

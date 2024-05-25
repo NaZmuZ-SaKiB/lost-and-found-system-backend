@@ -39,7 +39,21 @@ const login = z.object({
   }),
 });
 
+export const changePassword = z.object({
+  oldPassword: z.string({
+    required_error: "Old Password is required.",
+    invalid_type_error: "Old Password must be a string.",
+  }),
+  newPassword: z
+    .string({
+      required_error: "New Password is required.",
+      invalid_type_error: "New Password must be a string.",
+    })
+    .min(6, { message: "Password must be minimum 6 chars." }),
+});
+
 export const UserValidation = {
   create,
   login,
+  changePassword,
 };
