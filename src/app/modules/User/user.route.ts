@@ -25,6 +25,7 @@ router.post(
 // PUT
 router.put(
   "/change-password",
+  auth,
   validateRequest(UserValidation.changePassword),
   UserController.changePassword
 );
