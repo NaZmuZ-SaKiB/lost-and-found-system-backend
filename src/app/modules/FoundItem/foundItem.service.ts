@@ -89,6 +89,15 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
     });
   }
 
+  // Filter by userId
+  if (query?.userId) {
+    andConditions.push({
+      userId: {
+        equals: query?.userId as string,
+      },
+    });
+  }
+
   const whereConditions: Prisma.FoundItemWhereInput = { AND: andConditions };
   const result = await prisma.foundItem.findMany({
     where: whereConditions,

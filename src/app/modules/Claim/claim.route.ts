@@ -7,7 +7,7 @@ import { ClaimController } from "./claim.controller";
 const router = Router();
 
 // GET
-router.get("/", auth, ClaimController.getAllClaims);
+router.get("/", ClaimController.getAllClaims);
 
 // POST
 router.post(

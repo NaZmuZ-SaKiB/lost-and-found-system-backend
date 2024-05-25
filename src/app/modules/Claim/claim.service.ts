@@ -1,5 +1,5 @@
 import prisma from "../../utils/prisma";
-import { ClaimStatus } from "@prisma/client";
+import { ClaimStatus, Prisma } from "@prisma/client";
 import { TCreateClaimPayload } from "./claim.interface";
 
 const createClaim = async (payload: TCreateClaimPayload, userId: string) => {
@@ -20,8 +20,33 @@ const createClaim = async (payload: TCreateClaimPayload, userId: string) => {
   return result;
 };
 
-const getAllClaims = async () => {
+const getAllClaims = async (query: Record<string, unknown>) => {
+  // Handling Pagination
+  const page: number = Number(query?.page) || 1;
+  const limit: number = Number(query?.limit) || 5;
+  const skip: number = (page - 1) * limit;
+
+  // Handling Filters
+  const andConditions: Prisma.ClaimWhereInput[] = [];
+
+  // Filter by userId
+  if (query?.userId) {
+    andConditions.push({
+      userId: {
+        equals: query?.userId as string,
+      },
+    });
+  }
+
+  const whereConditions: Prisma.ClaimWhereInput = { AND: andConditions };
+
   const claims = await prisma.claim.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy: {
+      createdAt: "desc",
+    },
     include: {
       foundItem: {
         include: {

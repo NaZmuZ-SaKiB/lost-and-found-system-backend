@@ -5,7 +5,7 @@ import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 
 const getAllClaims = catchAsync(async (req, res) => {
-  const result = await ClaimService.getAllClaims();
+  const result = await ClaimService.getAllClaims(req.query);
 
   sendResponse(res, {
     success: true,

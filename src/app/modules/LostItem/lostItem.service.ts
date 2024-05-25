@@ -89,6 +89,15 @@ const getAllLostItems = async (query: Record<string, unknown>) => {
     });
   }
 
+  // Filter by userId
+  if (query?.userId) {
+    andConditions.push({
+      userId: {
+        equals: query?.userId as string,
+      },
+    });
+  }
+
   const whereConditions: Prisma.LostItemWhereInput = { AND: andConditions };
   const result = await prisma.lostItem.findMany({
     where: whereConditions,
