@@ -59,9 +59,26 @@ const isFoundItemClaimedByMe = catchAsync(
   }
 );
 
+const deleteFoundItem = catchAsync(
+  async (req: Request & { user?: any }, res) => {
+    const result = await FoundItemService.deleteFoundItem(
+      req.user.id,
+      req.params.id
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Found Item deleted successfully",
+      data: result,
+    });
+  }
+);
+
 export const FoundItemController = {
   getAllFoundItems,
   reportFoundItem,
   getFoundItemById,
   isFoundItemClaimedByMe,
+  deleteFoundItem,
 };

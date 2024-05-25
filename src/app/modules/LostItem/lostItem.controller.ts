@@ -29,7 +29,24 @@ const reportLostItem = catchAsync(
   }
 );
 
+const deleteLostItem = catchAsync(
+  async (req: Request & { user?: any }, res) => {
+    const result = await LostItemService.deleteLostItem(
+      req.user.id,
+      req.params.id
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Lost Item deleted successfully",
+      data: result,
+    });
+  }
+);
+
 export const LostItemController = {
   getAllLostItems,
   reportLostItem,
+  deleteLostItem,
 };

@@ -17,4 +17,7 @@ router.post(
   LostItemController.reportLostItem
 );
 
+// Delete
+router.delete("/:id", auth, LostItemController.deleteLostItem);
+
 export const LostItemRoutes = router;

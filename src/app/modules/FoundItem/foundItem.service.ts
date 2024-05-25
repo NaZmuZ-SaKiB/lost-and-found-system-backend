@@ -3,6 +3,8 @@ import prisma from "../../utils/prisma";
 import { FoundItemConstants } from "./foundItem.constant";
 import { TReportFoundItemPayload } from "./foundItem.interface";
 import { TSortOrder } from "../../interfaces";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 const reportFoundItem = async (
   payload: TReportFoundItemPayload,
@@ -180,9 +182,41 @@ const isFoundItemClaimedByMe = async (userId: string, foundItemId: string) => {
   }
 };
 
+const deleteFoundItem = async (userId: string, foundItemId: string) => {
+  const foundItem = await prisma.foundItem.findUnique({
+    where: {
+      id: foundItemId,
+    },
+    select: {
+      id: true,
+      userId: true,
+    },
+  });
+
+  if (!foundItem) {
+    throw new AppError(httpStatus.NOT_FOUND, "Found Item not found");
+  }
+
+  if (foundItem.userId !== userId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Unauthorized to delete this found item."
+    );
+  }
+
+  await prisma.foundItem.delete({
+    where: {
+      id: foundItemId,
+    },
+  });
+
+  return null;
+};
+
 export const FoundItemService = {
   getAllFoundItems,
   reportFoundItem,
   getFoundItemById,
   isFoundItemClaimedByMe,
+  deleteFoundItem,
 };

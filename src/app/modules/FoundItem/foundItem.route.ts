@@ -19,4 +19,7 @@ router.post(
   FoundItemController.reportFoundItem
 );
 
+// Delete
+router.delete("/:id", auth, FoundItemController.deleteFoundItem);
+
 export const FoundItemRoutes = router;

@@ -3,6 +3,8 @@ import prisma from "../../utils/prisma";
 import { TSortOrder } from "../../interfaces";
 import { TReportLostItemPayload } from "./lostItem.interface";
 import { LostItemConstants } from "./lostItem.constant";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 const reportLostItem = async (
   payload: TReportLostItemPayload,
@@ -140,7 +142,39 @@ const getAllLostItems = async (query: Record<string, unknown>) => {
   return { meta: { page, limit, total }, data: result };
 };
 
+const deleteLostItem = async (userId: string, lostItemId: string) => {
+  const lostItem = await prisma.lostItem.findUnique({
+    where: {
+      id: lostItemId,
+    },
+    select: {
+      id: true,
+      userId: true,
+    },
+  });
+
+  if (!lostItem) {
+    throw new AppError(httpStatus.NOT_FOUND, "Lost Item not found");
+  }
+
+  if (lostItem.userId !== userId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Unauthorized to delete this lost item."
+    );
+  }
+
+  await prisma.lostItem.delete({
+    where: {
+      id: lostItemId,
+    },
+  });
+
+  return null;
+};
+
 export const LostItemService = {
   getAllLostItems,
   reportLostItem,
+  deleteLostItem,
 };
