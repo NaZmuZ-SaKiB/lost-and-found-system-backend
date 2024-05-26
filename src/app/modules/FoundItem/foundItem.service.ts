@@ -117,6 +117,7 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
       brand: true,
       createdAt: true,
       updatedAt: true,
+      returned: true,
       user: {
         select: {
           id: true,

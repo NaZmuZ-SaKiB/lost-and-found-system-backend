@@ -19,7 +19,7 @@ router.post(
 
 // PUT
 router.put(
-  "/:claimId",
+  "/status/:claimId",
   auth,
   validateRequest(ClaimValidation.updateStatus),
   ClaimController.updateClaimStatus

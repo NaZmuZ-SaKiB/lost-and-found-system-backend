@@ -26,18 +26,24 @@ const createClaim = catchAsync(async (req: Request & { user?: any }, res) => {
   });
 });
 
-const updateClaimStatus = catchAsync(async (req, res) => {
-  const { claimId } = req.params;
+const updateClaimStatus = catchAsync(
+  async (req: Request & { user?: any }, res) => {
+    const { claimId } = req.params;
 
-  const result = await ClaimService.updateClaimStatus(claimId, req.body);
+    const result = await ClaimService.updateClaimStatus(
+      req.user.id,
+      claimId,
+      req.body
+    );
 
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "Claim updated successfully",
-    data: result,
-  });
-});
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Claim updated successfully",
+      data: result,
+    });
+  }
+);
 
 const deleteClaim = catchAsync(async (req: Request & { user?: any }, res) => {
   const result = await ClaimService.deleteClaim(

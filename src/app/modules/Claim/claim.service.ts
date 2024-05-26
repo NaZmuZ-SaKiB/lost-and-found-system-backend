@@ -78,24 +78,68 @@ const getAllClaims = async (query: Record<string, unknown>) => {
 };
 
 const updateClaimStatus = async (
+  userId: string,
   claimId: string,
   payload: { status: ClaimStatus }
 ) => {
   // if no claim with claimId, throw error
-  await prisma.claim.findUniqueOrThrow({
+  const claim = await prisma.claim.findUniqueOrThrow({
     where: {
       id: claimId,
     },
     select: {
       id: true,
+      status: true,
+      foundItem: {
+        select: {
+          id: true,
+          userId: true,
+        },
+      },
     },
   });
 
-  const result = await prisma.claim.update({
-    where: {
-      id: claimId,
-    },
-    data: payload,
+  if (claim.foundItem.userId !== userId) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "Unauthorized to update this Claim."
+    );
+  }
+
+  if (claim.status !== "PENDING") {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Can not update status after Aproving or Rejecting Claim."
+    );
+  }
+
+  // const result = await prisma.claim.update({
+  //   where: {
+  //     id: claimId,
+  //   },
+  //   data: payload,
+  // });
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const update = await transactionClient.claim.update({
+      where: {
+        id: claimId,
+      },
+      data: payload,
+    });
+
+    if (payload.status === "APPROVED") {
+      await transactionClient.foundItem.update({
+        where: {
+          id: claim.foundItem.id,
+        },
+        data: {
+          returned: true,
+        },
+      });
+    }
+
+    return update;
   });
 
   return result;
