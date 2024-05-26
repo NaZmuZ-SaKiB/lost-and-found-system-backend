@@ -52,23 +52,23 @@ const getAllClaims = async (query: Record<string, unknown>) => {
     include: {
       foundItem: {
         include: {
-          user: {
+          category: true,
+        },
+      },
+      user: {
+        select: {
+          id: true,
+
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+
+          userProfile: {
             select: {
-              id: true,
-
-              email: true,
-              createdAt: true,
-              updatedAt: true,
-
-              userProfile: {
-                select: {
-                  name: true,
-                  contactNo: true,
-                },
-              },
+              name: true,
+              contactNo: true,
             },
           },
-          category: true,
         },
       },
     },
@@ -94,6 +94,7 @@ const updateClaimStatus = async (
         select: {
           id: true,
           userId: true,
+          returned: true,
         },
       },
     },
@@ -104,6 +105,10 @@ const updateClaimStatus = async (
       httpStatus.UNAUTHORIZED,
       "Unauthorized to update this Claim."
     );
+  }
+
+  if (claim.foundItem.returned && claim.status === "APPROVED") {
+    throw new AppError(httpStatus.BAD_REQUEST, "Already Approved This item.");
   }
 
   if (claim.status !== "PENDING") {

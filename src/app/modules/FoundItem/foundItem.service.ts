@@ -161,6 +161,22 @@ const getFoundItemById = async (id: string) => {
         },
       },
       category: true,
+      claim: {
+        include: {
+          foundItem: true,
+          user: {
+            select: {
+              id: true,
+              userProfile: {
+                select: {
+                  name: true,
+                  contactNo: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
