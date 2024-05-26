@@ -5,6 +5,7 @@ import httpStatus from "http-status";
 import config from "../../config";
 import { jwtHelpers } from "../../utils/jwtHelpers";
 import { TCreateUserPayload } from "./user.interface";
+import { UserStatus } from "@prisma/client";
 
 const getMyProfile = async (userId: string) => {
   const profile = await prisma.userProfile.findUniqueOrThrow({
@@ -160,10 +161,93 @@ const getDashboardData = async () => {
   };
 };
 
+const getAllUsers = async (userId: string, query: Record<string, unknown>) => {
+  // Handling Pagination
+  const page: number = Number(query?.page) || 1;
+  const limit: number = Number(query?.limit) || 5;
+  const skip: number = (page - 1) * limit;
+
+  const users = await prisma.user.findMany({
+    where: {
+      id: {
+        not: {
+          equals: userId,
+        },
+      },
+    },
+    select: {
+      id: true,
+      email: true,
+      status: true,
+      role: true,
+      userProfile: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
+  const total = await prisma.user.count({
+    where: {
+      id: {
+        not: {
+          equals: userId,
+        },
+      },
+    },
+  });
+
+  return { meta: { page, limit, total }, data: users };
+};
+
+const updateUserStatus = async (
+  userId: string,
+  payload: {
+    status: UserStatus;
+  }
+) => {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { status: payload.status },
+    select: { id: true },
+  });
+
+  return null;
+};
+
+const toggleUserRole = async (userId: string) => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+    select: {
+      role: true,
+    },
+  });
+
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      role: user.role === "ADMIN" ? "USER" : "ADMIN",
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return null;
+};
+
 export const UserService = {
   createUserService,
   loginService,
   getMyProfile,
   changePasswordService,
   getDashboardData,
+  getAllUsers,
+  updateUserStatus,
+  toggleUserRole,
 };

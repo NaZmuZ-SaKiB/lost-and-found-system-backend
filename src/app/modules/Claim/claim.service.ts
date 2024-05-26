@@ -74,7 +74,11 @@ const getAllClaims = async (query: Record<string, unknown>) => {
     },
   });
 
-  return claims;
+  const total = await prisma.claim.count({
+    where: whereConditions,
+  });
+
+  return { meta: { page, limit, total }, data: claims };
 };
 
 const updateClaimStatus = async (

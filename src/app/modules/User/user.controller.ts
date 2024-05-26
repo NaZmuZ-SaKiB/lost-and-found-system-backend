@@ -70,10 +70,47 @@ const getDashboardData = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req: Request & { user?: any }, res) => {
+  const result = await UserService.getAllUsers(req?.user?.id, req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Users data received",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
+const updateUserStatus = catchAsync(async (req, res) => {
+  const result = await UserService.updateUserStatus(req.params?.id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User status updated",
+    data: result,
+  });
+});
+
+const toggleUserRole = catchAsync(async (req, res) => {
+  const result = await UserService.toggleUserRole(req.params?.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User role updated",
+    data: result,
+  });
+});
+
 export const UserController = {
   createUser,
   login,
   getMyProfile,
   changePassword,
   getDashboardData,
+  getAllUsers,
+  updateUserStatus,
+  toggleUserRole,
 };

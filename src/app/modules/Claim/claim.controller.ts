@@ -11,7 +11,8 @@ const getAllClaims = catchAsync(async (req, res) => {
     success: true,
     statusCode: httpStatus.OK,
     message: "Claims retrieved successfully",
-    data: result,
+    data: result.data,
+    meta: result.meta,
   });
 });
 

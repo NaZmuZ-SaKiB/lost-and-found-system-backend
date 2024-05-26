@@ -1,3 +1,4 @@
+import { UserStatus } from "@prisma/client";
 import z from "zod";
 
 const create = z.object({
@@ -52,8 +53,13 @@ export const changePassword = z.object({
     .min(6, { message: "Password must be minimum 6 chars." }),
 });
 
+const updateStatus = z.object({
+  status: z.enum([...Object.values(UserStatus)] as [string, ...string[]]),
+});
+
 export const UserValidation = {
   create,
   login,
   changePassword,
+  updateStatus,
 };
