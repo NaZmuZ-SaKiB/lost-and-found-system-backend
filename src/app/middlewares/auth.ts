@@ -10,7 +10,9 @@ import { Role } from "@prisma/client";
 
 const auth = (...roles: Role[]) => {
   return catchAsync(async (req: Request & { user?: any }, res, next) => {
-    const token = req.headers.authorization?.replace("Bearer ", "");
+    const token = (
+      req.headers.authorization || req.headers.cookie?.split("=")[1]
+    )?.replace("Bearer ", "");
     if (!token) {
       throw new AppError(httpStatus.UNAUTHORIZED, "You are not logged in.");
     }

@@ -175,6 +175,11 @@ const getAllUsers = async (userId: string, query: Record<string, unknown>) => {
         },
       },
     },
+    take: limit,
+    skip,
+    orderBy: {
+      createdAt: "desc",
+    },
     select: {
       id: true,
       email: true,
