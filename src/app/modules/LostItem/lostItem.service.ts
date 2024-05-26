@@ -168,6 +168,46 @@ const deleteLostItem = async (userId: string, lostItemId: string) => {
     where: {
       id: lostItemId,
     },
+    select: {
+      id: true,
+    },
+  });
+
+  return null;
+};
+
+const markAsFound = async (userId: string, lostItemId: string) => {
+  const lostItem = await prisma.lostItem.findUnique({
+    where: {
+      id: lostItemId,
+    },
+    select: {
+      id: true,
+      userId: true,
+    },
+  });
+
+  if (!lostItem) {
+    throw new AppError(httpStatus.NOT_FOUND, "Lost Item Not Found");
+  }
+
+  if (lostItem.userId !== userId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Unauthorized to update this lost item."
+    );
+  }
+
+  await prisma.lostItem.update({
+    where: {
+      id: lostItemId,
+    },
+    data: {
+      found: true,
+    },
+    select: {
+      id: true,
+    },
   });
 
   return null;
@@ -177,4 +217,5 @@ export const LostItemService = {
   getAllLostItems,
   reportLostItem,
   deleteLostItem,
+  markAsFound,
 };

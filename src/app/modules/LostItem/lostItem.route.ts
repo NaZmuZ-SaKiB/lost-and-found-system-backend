@@ -17,6 +17,9 @@ router.post(
   LostItemController.reportLostItem
 );
 
+// PUT
+router.put("/mark-found/:id", auth, LostItemController.markAsFound);
+
 // Delete
 router.delete("/:id", auth, LostItemController.deleteLostItem);
 

@@ -45,8 +45,20 @@ const deleteLostItem = catchAsync(
   }
 );
 
+const markAsFound = catchAsync(async (req: Request & { user?: any }, res) => {
+  const result = await LostItemService.markAsFound(req.user.id, req.params.id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Lost Item updated successfully",
+    data: result,
+  });
+});
+
 export const LostItemController = {
   getAllLostItems,
   reportLostItem,
   deleteLostItem,
+  markAsFound,
 };
