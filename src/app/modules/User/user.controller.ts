@@ -59,9 +59,21 @@ const changePassword = catchAsync(
   }
 );
 
+const getDashboardData = catchAsync(async (req, res) => {
+  const result = await UserService.getDashboardData();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Dashboard data received",
+    data: result,
+  });
+});
+
 export const UserController = {
   createUser,
   login,
   getMyProfile,
   changePassword,
+  getDashboardData,
 };

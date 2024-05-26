@@ -8,6 +8,7 @@ const router = Router();
 
 // GET
 router.get("/my-profile", auth(), UserController.getMyProfile);
+router.get("/dashboard-data", auth("ADMIN"), UserController.getDashboardData);
 
 // POST
 router.post(

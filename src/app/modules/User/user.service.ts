@@ -131,9 +131,39 @@ const changePasswordService = async (
   return null;
 };
 
+const getDashboardData = async () => {
+  const users = await prisma.user.count({
+    where: {
+      status: "ACTIVE",
+    },
+  });
+  const lostItems = await prisma.lostItem.count();
+  const foundLostItems = await prisma.lostItem.count({
+    where: {
+      found: true,
+    },
+  });
+  const foundItems = await prisma.foundItem.count();
+  const returnedItems = await prisma.foundItem.count({
+    where: {
+      returned: true,
+    },
+  });
+  const claims = await prisma.claim.count();
+
+  return {
+    userCount: users,
+    lostItemCount: lostItems,
+    foundItemCount: foundItems,
+    returnedItemCount: foundLostItems + returnedItems,
+    claimCount: claims,
+  };
+};
+
 export const UserService = {
   createUserService,
   loginService,
   getMyProfile,
   changePasswordService,
+  getDashboardData,
 };
