@@ -16,6 +16,17 @@ const getAllLostItems = catchAsync(async (req, res) => {
   });
 });
 
+const getLostItemById = catchAsync(async (req, res) => {
+  const result = await LostItemService.getLostItemById(req.params.id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Lost Item received successfully",
+    data: result,
+  });
+});
+
 const reportLostItem = catchAsync(
   async (req: Request & { user?: any }, res) => {
     const result = await LostItemService.reportLostItem(req.body, req.user.id);
@@ -58,6 +69,7 @@ const markAsFound = catchAsync(async (req: Request & { user?: any }, res) => {
 
 export const LostItemController = {
   getAllLostItems,
+  getLostItemById,
   reportLostItem,
   deleteLostItem,
   markAsFound,

@@ -8,6 +8,7 @@ const router = Router();
 
 // GET
 router.get("/", LostItemController.getAllLostItems);
+router.get("/:id", LostItemController.getLostItemById);
 
 // POST
 router.post(

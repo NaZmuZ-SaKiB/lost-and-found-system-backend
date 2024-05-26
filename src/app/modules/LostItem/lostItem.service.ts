@@ -142,6 +142,30 @@ const getAllLostItems = async (query: Record<string, unknown>) => {
   return { meta: { page, limit, total }, data: result };
 };
 
+const getLostItemById = async (id: string) => {
+  const result = await prisma.lostItem.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          userProfile: {
+            select: {
+              name: true,
+              contactNo: true,
+            },
+          },
+        },
+      },
+      category: true,
+    },
+  });
+
+  return result;
+};
+
 const deleteLostItem = async (userId: string, lostItemId: string) => {
   const lostItem = await prisma.lostItem.findUnique({
     where: {
@@ -215,6 +239,7 @@ const markAsFound = async (userId: string, lostItemId: string) => {
 
 export const LostItemService = {
   getAllLostItems,
+  getLostItemById,
   reportLostItem,
   deleteLostItem,
   markAsFound,
