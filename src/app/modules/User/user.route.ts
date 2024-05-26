@@ -7,7 +7,7 @@ import auth from "../../middlewares/auth";
 const router = Router();
 
 // GET
-router.get("/my-profile", auth, UserController.getMyProfile);
+router.get("/my-profile", auth(), UserController.getMyProfile);
 
 // POST
 router.post(
@@ -25,7 +25,7 @@ router.post(
 // PUT
 router.put(
   "/change-password",
-  auth,
+  auth(),
   validateRequest(UserValidation.changePassword),
   UserController.changePassword
 );

@@ -12,7 +12,7 @@ router.get("/", ClaimController.getAllClaims);
 // POST
 router.post(
   "/",
-  auth,
+  auth(),
   validateRequest(ClaimValidation.create),
   ClaimController.createClaim
 );
@@ -20,12 +20,12 @@ router.post(
 // PATCH
 router.patch(
   "/status/:claimId",
-  auth,
+  auth(),
   validateRequest(ClaimValidation.updateStatus),
   ClaimController.updateClaimStatus
 );
 
 // Delete
-router.delete("/:claimId", auth, ClaimController.deleteClaim);
+router.delete("/:claimId", auth(), ClaimController.deleteClaim);
 
 export const ClaimRoutes = router;

@@ -9,17 +9,21 @@ const router = Router();
 // GET
 router.get("/", FoundItemController.getAllFoundItems);
 router.get("/:id", FoundItemController.getFoundItemById);
-router.get("/is-claimed/:id", auth, FoundItemController.isFoundItemClaimedByMe);
+router.get(
+  "/is-claimed/:id",
+  auth(),
+  FoundItemController.isFoundItemClaimedByMe
+);
 
 // POST
 router.post(
   "/",
-  auth,
+  auth(),
   validateRequest(FoundItemValidation.reportFoundItem),
   FoundItemController.reportFoundItem
 );
 
 // Delete
-router.delete("/:id", auth, FoundItemController.deleteFoundItem);
+router.delete("/:id", auth(), FoundItemController.deleteFoundItem);
 
 export const FoundItemRoutes = router;

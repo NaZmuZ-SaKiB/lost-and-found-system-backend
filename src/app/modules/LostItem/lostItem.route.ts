@@ -12,15 +12,15 @@ router.get("/", LostItemController.getAllLostItems);
 // POST
 router.post(
   "/",
-  auth,
+  auth(),
   validateRequest(LostItemValidation.reportLostItem),
   LostItemController.reportLostItem
 );
 
 // PATCH
-router.patch("/mark-found/:id", auth, LostItemController.markAsFound);
+router.patch("/mark-found/:id", auth(), LostItemController.markAsFound);
 
 // Delete
-router.delete("/:id", auth, LostItemController.deleteLostItem);
+router.delete("/:id", auth(), LostItemController.deleteLostItem);
 
 export const LostItemRoutes = router;

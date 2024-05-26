@@ -9,7 +9,7 @@ const router = Router();
 // PUT
 router.put(
   "/my-profile",
-  auth,
+  auth(),
   validateRequest(ProfileValidation.updateProfile),
   ProfileController.updateProfile
 );

@@ -12,7 +12,7 @@ router.get("/", CategoryController.getAllCategories);
 // POST
 router.post(
   "/",
-  auth,
+  auth(),
   validateRequest(CategoryValidation.create),
   CategoryController.createCategory
 );
