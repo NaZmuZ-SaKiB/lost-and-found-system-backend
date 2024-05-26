@@ -191,6 +191,9 @@ const deleteFoundItem = async (userId: string, foundItemId: string) => {
     select: {
       id: true,
       userId: true,
+      claim: {
+        select: { id: true },
+      },
     },
   });
 
@@ -205,13 +208,27 @@ const deleteFoundItem = async (userId: string, foundItemId: string) => {
     );
   }
 
-  await prisma.foundItem.delete({
-    where: {
-      id: foundItemId,
-    },
+  const claimIds = foundItem.claim.map((item) => item.id);
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.foundItem.delete({
+      where: {
+        id: foundItemId,
+      },
+    });
+
+    await transactionClient.claim.deleteMany({
+      where: {
+        id: {
+          in: claimIds,
+        },
+      },
+    });
+
+    return null;
   });
 
-  return null;
+  return result;
 };
 
 export const FoundItemService = {

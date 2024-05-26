@@ -17,8 +17,8 @@ router.post(
   ClaimController.createClaim
 );
 
-// PUT
-router.put(
+// PATCH
+router.patch(
   "/status/:claimId",
   auth,
   validateRequest(ClaimValidation.updateStatus),
