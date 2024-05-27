@@ -34,6 +34,12 @@ const reportLostItem = z.object({
       invalid_type_error: "Contact No must be a string.",
     })
     .optional(),
+
+  image: z
+    .string({
+      invalid_type_error: "Image must be a string.",
+    })
+    .optional(),
 });
 
 export const LostItemValidation = {

@@ -120,6 +120,7 @@ const getAllLostItems = async (query: Record<string, unknown>) => {
       brand: true,
       contactNo: true,
       found: true,
+      image: true,
       location: true,
       lostDate: true,
       createdAt: true,

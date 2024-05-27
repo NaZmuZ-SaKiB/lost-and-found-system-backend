@@ -122,6 +122,7 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
       claimProcess: true,
       contactNo: true,
       brand: true,
+      image: true,
       createdAt: true,
       updatedAt: true,
       returned: true,

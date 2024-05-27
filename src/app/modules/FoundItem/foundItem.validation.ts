@@ -44,6 +44,12 @@ const reportFoundItem = z.object({
       invalid_type_error: "Claim Process must be a string.",
     })
     .optional(),
+
+  image: z
+    .string({
+      invalid_type_error: "Image must be a string.",
+    })
+    .optional(),
 });
 
 export const FoundItemValidation = {
