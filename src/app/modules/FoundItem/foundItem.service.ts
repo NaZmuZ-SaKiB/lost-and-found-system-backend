@@ -100,6 +100,13 @@ const getAllFoundItems = async (query: Record<string, unknown>) => {
     });
   }
 
+  // Filter by categoryId
+  if (query?.category) {
+    andConditions.push({
+      categoryId: query?.category,
+    });
+  }
+
   const whereConditions: Prisma.FoundItemWhereInput = { AND: andConditions };
   const result = await prisma.foundItem.findMany({
     where: whereConditions,

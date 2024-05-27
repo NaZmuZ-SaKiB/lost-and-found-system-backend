@@ -100,6 +100,13 @@ const getAllLostItems = async (query: Record<string, unknown>) => {
     });
   }
 
+  // Filter by categoryId
+  if (query?.category) {
+    andConditions.push({
+      categoryId: query?.category,
+    });
+  }
+
   const whereConditions: Prisma.LostItemWhereInput = { AND: andConditions };
   const result = await prisma.lostItem.findMany({
     where: whereConditions,
