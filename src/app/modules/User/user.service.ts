@@ -5,7 +5,7 @@ import httpStatus from "http-status";
 import config from "../../config";
 import { jwtHelpers } from "../../utils/jwtHelpers";
 import { TCreateUserPayload } from "./user.interface";
-import { UserStatus } from "@prisma/client";
+import { Prisma, UserStatus } from "@prisma/client";
 
 const getMyProfile = async (userId: string) => {
   const profile = await prisma.userProfile.findUniqueOrThrow({
@@ -167,14 +167,51 @@ const getAllUsers = async (userId: string, query: Record<string, unknown>) => {
   const limit: number = Number(query?.limit) || 5;
   const skip: number = (page - 1) * limit;
 
-  const users = await prisma.user.findMany({
-    where: {
-      id: {
-        not: {
-          equals: userId,
+  // Handling Filters
+  const andConditions: Prisma.UserWhereInput[] = [];
+
+  // Filter By Search
+  if (query?.searchTerm) {
+    andConditions.push({
+      OR: [
+        {
+          email: {
+            contains: query?.searchTerm as string,
+            mode: "insensitive",
+          },
         },
+        {
+          userProfile: {
+            name: {
+              contains: query?.searchTerm as string,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          userProfile: {
+            contactNo: {
+              contains: query?.searchTerm as string,
+              mode: "insensitive",
+            },
+          },
+        },
+      ],
+    });
+  }
+
+  andConditions.push({
+    id: {
+      not: {
+        equals: userId,
       },
     },
+  });
+
+  const whereConditions: Prisma.UserWhereInput = { AND: andConditions };
+
+  const users = await prisma.user.findMany({
+    where: whereConditions,
     take: limit,
     skip,
     orderBy: {
@@ -194,13 +231,7 @@ const getAllUsers = async (userId: string, query: Record<string, unknown>) => {
   });
 
   const total = await prisma.user.count({
-    where: {
-      id: {
-        not: {
-          equals: userId,
-        },
-      },
-    },
+    where: whereConditions,
   });
 
   return { meta: { page, limit, total }, data: users };

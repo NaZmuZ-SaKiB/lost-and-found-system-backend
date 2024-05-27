@@ -5,6 +5,8 @@ const searchableFields: (keyof LostItem)[] = [
   "lostItemName",
   "location",
   "description",
+  "brand",
+  "contactNo",
 ];
 
 const sortableFields: string[] = ["lostItemName", "category", "lostDate"];

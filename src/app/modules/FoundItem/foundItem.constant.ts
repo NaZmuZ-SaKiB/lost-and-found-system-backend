@@ -5,6 +5,8 @@ const searchableFields: (keyof FoundItem)[] = [
   "foundItemName",
   "location",
   "description",
+  "brand",
+  "contactNo",
 ];
 
 const sortableFields: string[] = ["foundItemName", "category", "foundDate"];
