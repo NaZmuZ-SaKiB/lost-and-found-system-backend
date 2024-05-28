@@ -2,7 +2,7 @@
 
 This is a lost item management backend project. User can register and manage their profile. User can report found items, lost items, claim a lost item from the reported items, track their claim status and search lost and found items with a robust filterring system.
 
-### [Live Site Link](https://gadgets-inventory-management-backend.vercel.app)
+### [Live Site Link](https://lost-and-found-system-backend.vercel.app)
 
 ## Technology
 
