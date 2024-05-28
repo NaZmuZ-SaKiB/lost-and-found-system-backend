@@ -29,6 +29,11 @@ const updateProfile = z.object({
         invalid_type_error: "Age must be a number.",
       })
       .optional(),
+    image: z
+      .string({
+        invalid_type_error: "Image must be a string.",
+      })
+      .optional(),
   }),
 });
 
