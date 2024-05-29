@@ -33,6 +33,7 @@ This is a lost item management backend project. User can register and manage the
    - `DATABASE_URL` = (your database url for connection)
    - `JWT_TOKEN_SECRET` = secret for jwt
    - `JWT_TOKEN_EXPIRES_IN` = jwt expire time
+   - `FRONTEND_URL` = Front end/ Client Side link
 
 4. Run the development server using following command:
    - `npm run dev` or `yarn dev`
