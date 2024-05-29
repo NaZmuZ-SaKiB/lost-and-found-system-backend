@@ -11,4 +11,5 @@ export default {
 
   jwt_token_secret: process.env.JWT_TOKEN_SECRET,
   jwt_token_expires_in: process.env.JWT_TOKEN_EXPIRES_IN,
+  frontend_url: process.env.FRONTEND_URL,
 };
