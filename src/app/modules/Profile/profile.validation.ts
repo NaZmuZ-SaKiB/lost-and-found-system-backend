@@ -34,6 +34,26 @@ const updateProfile = z.object({
         invalid_type_error: "Image must be a string.",
       })
       .optional(),
+    jobTitle: z
+      .string({
+        invalid_type_error: "Job Title must be a string.",
+      })
+      .optional(),
+    location: z
+      .string({
+        invalid_type_error: "Location must be a string.",
+      })
+      .optional(),
+    interests: z
+      .string({
+        invalid_type_error: "Interests must be a string.",
+      })
+      .optional(),
+    aboutMe: z
+      .string({
+        invalid_type_error: "About Me must be a string.",
+      })
+      .optional(),
   }),
 });
 
