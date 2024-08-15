@@ -8,6 +8,7 @@ const router = Router();
 
 // GET
 router.get("/", CategoryController.getAllCategories);
+router.get("/:id", CategoryController.getCategoryById);
 
 // POST
 router.post(
@@ -15,6 +16,14 @@ router.post(
   auth("ADMIN"),
   validateRequest(CategoryValidation.create),
   CategoryController.createCategory
+);
+
+// PATCH
+router.patch(
+  "/:id",
+  auth("ADMIN"),
+  validateRequest(CategoryValidation.create),
+  CategoryController.updateCategory
 );
 
 export const CategoryRoutes = router;
