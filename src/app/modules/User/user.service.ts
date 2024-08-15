@@ -295,6 +295,44 @@ const getDashboardData = async () => {
   };
 };
 
+const getUserDashboardData = async (userId: string) => {
+  const lostItems = await prisma.lostItem.count({
+    where: {
+      userId,
+    },
+  });
+  const foundLostItems = await prisma.lostItem.count({
+    where: {
+      found: true,
+      userId,
+    },
+  });
+  const foundItems = await prisma.foundItem.count({
+    where: {
+      userId,
+    },
+  });
+  const returnedItems = await prisma.foundItem.count({
+    where: {
+      returned: true,
+      userId,
+    },
+  });
+  const claims = await prisma.claim.count({
+    where: {
+      userId,
+    },
+  });
+
+  return {
+    lostItemCount: lostItems,
+    foundItemCount: foundItems,
+    returnedFoundItems: returnedItems,
+    returnedItemCount: foundLostItems + returnedItems,
+    claimCount: claims,
+  };
+};
+
 export const UserService = {
   createUserService,
   loginService,
@@ -304,4 +342,5 @@ export const UserService = {
   getAllUsers,
   updateUserStatus,
   toggleUserRole,
+  getUserDashboardData,
 };

@@ -4,6 +4,7 @@ import sendResponse from "../../utils/sendResponse";
 import { UserService } from "./user.service";
 import { Request } from "express";
 import config from "../../config";
+import { Role } from "@prisma/client";
 
 const getMyProfile = catchAsync(async (req: Request & { user?: any }, res) => {
   const result = await UserService.getMyProfile(req.user.id);
@@ -59,16 +60,24 @@ const changePassword = catchAsync(
   }
 );
 
-const getDashboardData = catchAsync(async (req, res) => {
-  const result = await UserService.getDashboardData();
+const getDashboardData = catchAsync(
+  async (req: Request & { user?: any }, res) => {
+    let result: any;
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Dashboard data received",
-    data: result,
-  });
-});
+    if (req?.user?.role === Role.ADMIN) {
+      result = await UserService.getDashboardData();
+    } else {
+      result = await UserService.getUserDashboardData(req?.user?.id);
+    }
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Dashboard data received",
+      data: result,
+    });
+  }
+);
 
 const getAllUsers = catchAsync(async (req: Request & { user?: any }, res) => {
   const result = await UserService.getAllUsers(req?.user?.id, req.query);

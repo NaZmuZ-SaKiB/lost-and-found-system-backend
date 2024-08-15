@@ -9,7 +9,7 @@ const router = Router();
 // GET
 router.get("/", auth("ADMIN"), UserController.getAllUsers);
 router.get("/my-profile", auth(), UserController.getMyProfile);
-router.get("/dashboard-data", auth("ADMIN"), UserController.getDashboardData);
+router.get("/dashboard-data", auth(), UserController.getDashboardData);
 
 // POST
 router.post(
